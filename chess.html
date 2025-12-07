@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chess Board</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="chess.html">Chess Board</a>
+    <a href="contact.html">Contact</a>
+</nav>
+
+<h1>Golden Knights Chess Board</h1>
+
+<div class="chessboard">
+    <!-- 64 squares -->
+    <script>
+        let board = "";
+        for(let i=0; i<64; i++){
+            let isBlack = (Math.floor(i/8) + i) % 2 === 0;
+            board += `<div class="chess-square ${isBlack ? 'black' : 'white'}"></div>`;
+        }
+        document.write(board);
+    </script>
+</div>
+
+</body>
+</html>
