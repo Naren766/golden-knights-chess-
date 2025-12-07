@@ -1,47 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoldenKnights Chess</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GoldenKnights — Premium Chess</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Chess.js for legal move generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js"></script>
 </head>
 <body>
-
-    <!-- TOP BAR -->
-    <header class="top-bar">
-        <h1 class="logo">♛ GOLDENKNIGHTS</h1>
-        <div class="coins">
-            <img src="coin.png" class="coin-img">
-            <span id="coinCount">0</span>
-        </div>
-    </header>
-
-    <!-- MAIN LAYOUT -->
-    <div class="container">
-
-        <!-- LEFT MENU -->
-        <nav class="sidebar">
-            <button class="menu-btn" onclick="showHome()">🏠 Home</button>
-            <button class="menu-btn" onclick="showPlay()">♟️ Play</button>
-            <button class="menu-btn" onclick="showPuzzle()">🧩 Golden Puzzle</button>
-            <button class="menu-btn" onclick="showShop()">💰 Rewards Shop</button>
-            <button class="menu-btn" onclick="showTournaments()">🏆 Tournaments</button>
-            <button class="menu-btn" onclick="showSettings()">⚙️ Settings</button>
-        </nav>
-
-        <!-- MAIN CONTENT PANEL -->
-        <main id="content">
-            <h2>Welcome to GoldenKnights</h2>
-            <p>Choose an option from the menu to begin.</p>
-        </main>
-
-        <!-- CHESS BOARD AREA -->
-        <section class="board-area">
-            <div id="chessBoard"></div>
-        </section>
+  <header class="top-bar">
+    <div class="logo">♛ GOLDENKNIGHTS</div>
+    <div class="top-controls">
+      <div class="coins">Coins: <span id="coinCount">0</span></div>
+      <button id="resetBtn" class="small">Reset</button>
+      <button id="undoBtn" class="small">Undo</button>
     </div>
+  </header>
 
-    <script src="script.js"></script>
+  <div class="container">
+    <nav class="sidebar">
+      <button class="menu-btn" onclick="showPanel('home')">Home</button>
+      <button class="menu-btn" onclick="showPanel('play')">Play</button>
+      <button class="menu-btn" onclick="showPanel('puzzle')">Golden Puzzle</button>
+      <button class="menu-btn" onclick="showPanel('shop')">Rewards</button>
+      <button class="menu-btn" onclick="showPanel('tournaments')">Tournaments</button>
+      <button class="menu-btn" onclick="showPanel('settings')">Settings</button>
+    </nav>
+
+    <main id="content">
+      <section id="home" class="panel active">
+        <h2>Welcome</h2>
+        <p>Welcome to GoldenKnights — premium chess experience.</p>
+      </section>
+
+      <section id="play" class="panel">
+        <div class="play-grid">
+          <div class="board-wrap">
+            <div id="board" class="board"></div>
+          </div>
+
+          <aside class="right-panel">
+            <div class="status" id="status">Status: Ready</div>
+            <div class="controls">
+              <label>Orientation
+                <select id="orientation">
+                  <option value="white">White</option>
+                  <option value="black">Black</option>
+                </select>
+              </label>
+              <label>Theme
+                <select id="themeSelect">
+                  <option value="gold">Gold & White</option>
+                  <option value="lightPurple">Light Purple & White</option>
+                  <option value="red">Red & White</option>
+                </select>
+              </label>
+              <label><input id="highlightMoves" type="checkbox" checked> Show legal moves</label>
+            </div>
+
+            <div class="moves">
+              <h3>Move List</h3>
+              <ol id="moveList"></ol>
+            </div>
+
+            <div class="analytics">
+              <h3>Game Info</h3>
+              <p id="turnInfo">Turn: White</p>
+              <p id="gameResult"></p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="puzzle" class="panel">
+        <h2>Golden Puzzle (coming soon)</h2>
+        <p>Daily advanced puzzles to earn coins and prizes.</p>
+      </section>
+
+      <section id="shop" class="panel">
+        <h2>Rewards Shop</h2>
+        <p>Exchange gold coins for Golden King cosmetic (coming soon)</p>
+      </section>
+
+      <section id="tournaments" class="panel">
+        <h2>Tournaments</h2>
+        <p>See and join tournaments (coming soon).</p>
+      </section>
+
+      <section id="settings" class="panel">
+        <h2>Settings</h2>
+        <p>Contact: +91 9361342194 • Email: info@goldenknights.com</p>
+      </section>
+    </main>
+  </div>
+
+  <!-- Promotion modal (simple) -->
+  <div id="promotionModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Pawn Promotion</h3>
+      <p>Promote to:</p>
+      <div class="promo-buttons">
+        <button data-piece="q">Queen</button>
+        <button data-piece="r">Rook</button>
+        <button data-piece="b">Bishop</button>
+        <button data-piece="n">Knight</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
 </body>
 </html>
