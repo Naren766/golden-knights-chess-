@@ -1,10 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Golden Knights Chess</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldenKnights Chess</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Golden Knights Chess Website Working!</h1>
-<p>If you can see this message, your website is running.</p>
+
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <h1 class="logo">♛ GOLDENKNIGHTS</h1>
+        <div class="coins">
+            <img src="coin.png" class="coin-img">
+            <span id="coinCount">0</span>
+        </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <div class="container">
+
+        <!-- LEFT MENU -->
+        <nav class="sidebar">
+            <button class="menu-btn" onclick="showHome()">🏠 Home</button>
+            <button class="menu-btn" onclick="showPlay()">♟️ Play</button>
+            <button class="menu-btn" onclick="showPuzzle()">🧩 Golden Puzzle</button>
+            <button class="menu-btn" onclick="showShop()">💰 Rewards Shop</button>
+            <button class="menu-btn" onclick="showTournaments()">🏆 Tournaments</button>
+            <button class="menu-btn" onclick="showSettings()">⚙️ Settings</button>
+        </nav>
+
+        <!-- MAIN CONTENT PANEL -->
+        <main id="content">
+            <h2>Welcome to GoldenKnights</h2>
+            <p>Choose an option from the menu to begin.</p>
+        </main>
+
+        <!-- CHESS BOARD AREA -->
+        <section class="board-area">
+            <div id="chessBoard"></div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
