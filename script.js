@@ -1,27 +1,71 @@
 const game = new Chess();
 const boardEl = document.getElementById('board');
 const promotionModal = document.getElementById('promotionModal');
+const UNICODE = {p:'♟', r:'♜', n:'♞', b:'♝', q:'♛', k:'♚', P:'♙', R:'♖', N:'♘', B:'♗', Q:'♕', K:'♔'};
 
-const UNICODE = {
-  p: '♟', r: '♜', n: '♞', b: '♝', q: '♛', k: '♚',
-  P: '♙', R: '♖', N: '♘', B: '♗', Q: '♕', K: '♔'
-};
+// --- Coins & Streaks ---
+let coinCount = parseInt(localStorage.getItem('coinCount')) || 0;
+let puzzleStreak = parseInt(localStorage.getItem('puzzleStreak')) || 0;
+let lastPuzzleDate = localStorage.getItem('lastPuzzleDate') || null;
+document.getElementById('coinCount').textContent = coinCount;
 
+function completeDailyPuzzle(){
+  const today = new Date().toISOString().slice(0,10);
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+  if(lastPuzzleDate === today) return;
+
+  if(lastPuzzleDate === yesterday) puzzleStreak++;
+  else puzzleStreak = 1;
+
+  lastPuzzleDate = today;
+  localStorage.setItem('lastPuzzleDate', today);
+  localStorage.setItem('puzzleStreak', puzzleStreak);
+
+  let coinsAwarded = 0;
+  if(puzzleStreak === 3) coinsAwarded=25;
+  else if(puzzleStreak === 7) coinsAwarded=50;
+  else if(puzzleStreak === 14) coinsAwarded=50;
+  else if(puzzleStreak === 30) coinsAwarded=150;
+
+  if(coinsAwarded>0){
+    coinCount+=coinsAwarded;
+    localStorage.setItem('coinCount', coinCount);
+    document.getElementById('coinCount').textContent = coinCount;
+    alert(`🎉 Streak ${puzzleStreak} days! You earned ${coinsAwarded} coins!`);
+  }
+}
+
+// --- Buy Golden King ---
+document.getElementById('buyGoldenKing').addEventListener('click',()=>{
+  const cost=150;
+  if(coinCount>=cost){
+    coinCount-=cost;
+    localStorage.setItem('coinCount', coinCount);
+    document.getElementById('coinCount').textContent = coinCount;
+    localStorage.setItem('goldenKing', true);
+    alert('✅ You bought the Golden King!');
+    renderBoard();
+  } else alert('❌ Not enough coins.');
+});
+
+// --- Render Board ---
 function renderBoard(){
   boardEl.innerHTML='';
   const board = game.board();
+  const goldenKingOwned = localStorage.getItem('goldenKing')==='true';
   for(let r=0;r<8;r++){
     for(let f=0;f<8;f++){
       const square=document.createElement('div');
       square.className='square '+((r+f)%2===0?'light':'dark');
       square.dataset.square=String.fromCharCode(97+f)+(8-r);
-      const piece = board[r][f];
+      const piece=board[r][f];
       if(piece){
-        const p = document.createElement('div');
-        p.className='piece';
-        p.textContent = UNICODE[piece.color==='w'?piece.type.toUpperCase():piece.type];
-        p.dataset.piece = piece.color==='w'?piece.type.toUpperCase():piece.type;
-        p.addEventListener('pointerdown', startDrag);
+        const p=document.createElement('div');
+        let symbol = UNICODE[piece.color==='w'?piece.type.toUpperCase():piece.type];
+        if(goldenKingOwned && piece.type==='k' && piece.color==='w'){
+          p.style.textShadow='0 0 10px gold, 0 0 20px gold';
+        }
+        p.textContent = symbol;
         square.appendChild(p);
       }
       boardEl.appendChild(square);
@@ -29,77 +73,11 @@ function renderBoard(){
   }
 }
 
-let dragPiece = null;
-let sourceSquare = null;
-
-function startDrag(e){
-  const piece=e.currentTarget;
-  dragPiece=piece;
-  sourceSquare=piece.parentElement.dataset.square;
-  piece.setPointerCapture(e.pointerId);
-  piece.style.position='absolute';
-  piece.style.zIndex=1000;
-  moveDrag(e);
-  boardEl.addEventListener('pointermove', moveDrag);
-  boardEl.addEventListener('pointerup', endDrag);
-}
-
-function moveDrag(e){
-  if(!dragPiece) return;
-  const rect=boardEl.getBoundingClientRect();
-  dragPiece.style.left=(e.clientX-rect.left-dragPiece.offsetWidth/2)+'px';
-  dragPiece.style.top=(e.clientY-rect.top-dragPiece.offsetHeight/2)+'px';
-}
-
-function endDrag(e){
-  boardEl.removeEventListener('pointermove',moveDrag);
-  boardEl.removeEventListener('pointerup',endDrag);
-  const rect=boardEl.getBoundingClientRect();
-  const x=Math.floor((e.clientX-rect.left)/(rect.width/8));
-  const y=Math.floor((e.clientY-rect.top)/(rect.height/8));
-  const to=String.fromCharCode(97+x)+(8-y);
-  attemptMove(sourceSquare,to);
-  dragPiece.style.position='';
-  dragPiece.style.left='';
-  dragPiece.style.top='';
-  dragPiece=null;
-  sourceSquare=null;
-}
-
-function attemptMove(from,to,promotion=null){
-  const moves=game.moves({verbose:true}).filter(m=>m.from===from && m.to===to);
-  if(moves.length===0){ renderBoard(); return; }
-  const promotionMoves=moves.filter(m=>m.flags.includes('p'));
-  if(promotionMoves.length>0 && !promotion){
-    showPromotionModal(from,to); return;
-  }
-  game.move({from,to,promotion:promotion||'q'});
-  renderBoard();
-}
-
-function showPromotionModal(from,to){
-  promotionModal.classList.remove('hidden');
-  promotionModal.querySelectorAll('button[data-piece]').forEach(btn=>{
-    btn.onclick=()=>{
-      promotionModal.classList.add('hidden');
-      attemptMove(from,to,btn.dataset.piece);
-    };
-  });
-}
-
-document.getElementById('resetBtn').addEventListener('click',()=>{
-  game.reset();
-  renderBoard();
-});
-
-document.getElementById('undoBtn').addEventListener('click',()=>{
-  game.undo();
-  renderBoard();
-});
-
+// --- Panels ---
 function showPanel(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
+// --- Initial Render ---
 renderBoard();
