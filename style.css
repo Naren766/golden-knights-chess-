@@ -85,3 +85,15 @@ main { flex: 1; padding: 20px; overflow: auto; }
   border-radius: 10px;
 }
 .hidden { display: none; }
+
+/* Puzzle & rewards grid */
+.puzzle-grid, .reward-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.puzzle-grid img, .reward-grid img {
+  width: 150px;
+  border-radius: 8px;
+  border: 2px solid #d4af37;
+}
