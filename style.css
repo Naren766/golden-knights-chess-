@@ -1,103 +1,97 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: white;
+/* Premium Gold & White theme UI */
+:root{
+  --gold:#d4af37;
+  --bg:#0f0f10;
+  --panel:#121213;
+  --muted:#cfcfcf;
 }
 
-/* TOP BAR */
-.top-bar {
-    background: gold;
-    color: black;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter, Arial, sans-serif;
+  background:var(--bg);
+  color: #eee;
+  -webkit-font-smoothing:antialiased;
 }
 
-.logo {
-    margin: 0;
-    font-size: 28px;
-    font-weight: bold;
+.top-bar{
+  background:linear-gradient(90deg,var(--gold), #f7d77a);
+  color:#0c0c0c;
+  display:flex;
+  justify-content:space-between;
+  padding:14px 20px;
+  align-items:center;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
 }
 
-.coins {
-    display: flex;
-    align-items: center;
-    font-size: 20px;
+.logo{font-weight:800; font-size:18px; letter-spacing:1px}
+.top-controls{display:flex; gap:10px; align-items:center}
+.small{background:rgba(0,0,0,0.08); border:none; padding:6px 10px; border-radius:6px; cursor:pointer}
+
+/* Layout */
+.container{display:flex; height:calc(100vh - 56px)}
+.sidebar{width:200px; background:#0d0d0d; padding:18px; border-right:1px solid rgba(255,255,255,0.03)}
+.menu-btn{display:block; width:100%; margin-bottom:10px; padding:10px; border-radius:8px; background:transparent; color:#ddd; border:1px solid rgba(255,255,255,0.03); cursor:pointer; text-align:left}
+.menu-btn:hover{background:rgba(255,255,255,0.03)}
+
+main{flex:1; padding:20px; overflow:auto}
+.panel{display:none}
+.panel.active{display:block}
+
+/* Play grid */
+.play-grid{display:flex; gap:20px; align-items:flex-start}
+.board-wrap{padding:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2)); border-radius:12px; border:1px solid rgba(255,255,255,0.03)}
+.board{width:480px; height:480px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); border-radius:8px; overflow:hidden; box-shadow:0 12px 30px rgba(0,0,0,0.6)}
+
+/* squares */
+.square{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition: background 180ms, box-shadow 180ms;
 }
 
-.coin-img {
-    width: 30px;
-    margin-right: 5px;
+/* default theme gold & white */
+.square.light{background:#fff8e7}
+.square.dark{background:#d4af37}
+
+/* piece style */
+.piece{
+  font-size:42px;
+  line-height:1;
+  pointer-events:none;
+  transition: transform 120ms;
+  user-select:none;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
 }
 
-/* LAYOUT */
-.container {
-    display: flex;
-    height: calc(100vh - 70px);
-}
+/* highlight legal move */
+.square.highlight{ box-shadow: inset 0 0 0 4px rgba(255,255,255,0.45); }
 
-/* LEFT MENU */
-.sidebar {
-    width: 200px;
-    background: #222;
-    padding-top: 20px;
-}
+/* last move highlight */
+.square.last-move{ outline: 4px solid rgba(0,0,0,0.12); box-shadow:0 6px 18px rgba(0,0,0,0.25) inset; }
 
-.menu-btn {
-    display: block;
-    width: 90%;
-    margin: 10px auto;
-    padding: 12px;
-    background: gold;
-    color: black;
-    font-size: 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.2s;
-}
+/* right panel */
+.right-panel{width:320px; background:var(--panel); padding:16px; border-radius:10px; color:var(--muted)}
+.status{margin-bottom:10px; font-weight:600}
+.controls label{display:block; margin-bottom:8px; font-size:14px}
 
-.menu-btn:hover {
-    background: white;
-}
+/* move list */
+.moves{margin-top:14px; max-height:220px; overflow:auto}
+.moves ol{padding-left:18px}
 
-/* MAIN CONTENT */
-#content {
-    flex: 1;
-    background: #181818;
-    padding: 20px;
-    overflow-y: auto;
-}
+/* modal */
+.modal{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.6)}
+.modal-card{background:#fff; color:#111; padding:18px; border-radius:10px; min-width:260px}
+.hidden{display:none}
 
-/* CHESS BOARD */
-.board-area {
-    width: 520px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#chessBoard {
-    width: 480px;
-    height: 480px;
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    border: 5px solid gold;
-}
-
-.white {
-    background: white;
-}
-
-.gold {
-    background: gold;
-}
-
-.piece {
-    font-size: 45px;
-    text-align: center;
-    cursor: grab;
-    user-select: none;
+/* responsive */
+@media(max-width:1000px){
+  .play-grid{flex-direction:column; align-items:center}
+  .right-panel{width:90%}
+  .sidebar{display:none}
 }
