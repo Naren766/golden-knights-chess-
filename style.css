@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0f0f10;
+  background: #111;
   color: #eee;
 }
 
@@ -42,7 +42,7 @@ main { flex: 1; padding: 20px; overflow: auto; }
 .panel.active { display: block; }
 
 /* Board */
-.board-wrap { padding: 12px; }
+.board-wrap { padding: 12px; display:flex; justify-content:center; }
 .board {
   width: 480px;
   height: 480px;
@@ -59,13 +59,14 @@ main { flex: 1; padding: 20px; overflow: auto; }
   align-items: center;
 }
 
-.square.light { background: #fff8e7; }
-.square.dark { background: #d4af37; }
+.square.light { background: #fff8e7 !important; }
+.square.dark { background: #d4af37 !important; }
 
 .piece {
   font-size: 42px;
   user-select: none;
   pointer-events: none;
+  cursor: grab;
 }
 
 /* Modal */
